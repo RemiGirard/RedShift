@@ -2,10 +2,14 @@ import controlP5.*;
 ControlP5 p5;
 Light[] L1 = new Light[1000];
 
+
 //parameters
 float lightspeed=5;
 float movespeed=0.1;
 int lightnumbermax=50;
+float lightsize = 10;
+float spaceshipsize = 10;
+boolean locklightgenerator=false;
 
 // init var
 float posX=100;
@@ -26,12 +30,55 @@ void setup(){
    size(1000,1000); 
    frameRate(25);
    colorMode(HSB,100);
+   
+   p5 = new ControlP5(this);
    v1 = new PVector(0,0);
    oldv1 = new PVector(0,0);
  
    for (int i = 0; i < keytopress.length; i++) {
      keytopress[i] = false;
   }
+ 
+ float interfaceplace = 10;
+  //interface
+p5.addSlider("lightnumbermax")
+     .setPosition(10,10)
+     .setRange(0,255)
+     ;
+interfaceplace = interfaceplace+20;
+
+
+  
+  p5.addSlider("lightspeed")
+     .setPosition(10,interfaceplace)
+     .setRange(0,20)
+     ;
+     interfaceplace = interfaceplace+20;
+     
+     p5.addSlider("lightsize")
+     .setPosition(10,interfaceplace)
+     .setRange(0,50)
+     ;
+     interfaceplace = interfaceplace+20;
+     
+     p5.addSlider("spaceshipsize")
+     .setPosition(10,interfaceplace)
+     .setRange(0,100)
+     ;
+     interfaceplace = interfaceplace+20;
+     
+     p5.addSlider("movespeed")
+     .setPosition(10,interfaceplace)
+     .setRange(0,lightspeed)
+     ;
+     interfaceplace = interfaceplace+20;
+     
+     p5.addButton("locklightgenerator")
+     .setValue(0)
+     .setPosition(10,interfaceplace)
+     .setSize(200,19)
+     ;
+     interfaceplace = interfaceplace+20;
 }
 
 void draw(){
@@ -44,10 +91,7 @@ void draw(){
   if(posX>width){posX=width;v1.x=0;}
   if(posY>height){posY=height;v1.y=0;}
   
-  //create the object
-  c = color(50,50,50);
-  fill(c);
-  ellipse(posX,posY,10,10);
+  
   
    //move the waves of lights
  if(started){
@@ -63,16 +107,19 @@ void draw(){
      }else{println("L1["+i+"] is null");}
 //     if(i==lightnumbermax){i=0;}
 
-     
-     
     }
     
+    
+    //create the object
+  c = color(50,50,50);
+  fill(c);
+  ellipse(posX,posY,spaceshipsize,spaceshipsize);
     
   }
   
 // get the keys pressed
 //Space to create light
-if(keytopress[0]){
+if(keytopress[0] || locklightgenerator){
   if(lightnumber>lightnumbermax){lightnumber=0;lightmove=1;}
   
    L1[lightnumber]= new Light(lightnumber);

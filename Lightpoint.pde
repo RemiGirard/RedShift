@@ -34,7 +34,7 @@ void display(){
   //create the point
   fill(c);
   noStroke();
-  ellipse(poslpX,poslpY,10,10);
+  ellipse(poslpX,poslpY,lightsize,lightsize);
   //test if the point is out of the screen
   if(poslpX<0 || poslpX>width || poslpY<0 || poslpY>height){inscreen=false;}
   }
