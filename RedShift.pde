@@ -13,12 +13,22 @@ int lightnumbermax=50;
 float lightsize = 10;
 float spaceshipsize = 10;
 boolean locklightgenerator=true;
-float objectspeed = 0;
+boolean lockpulsarbutton=true;
+boolean pulsar=false;
+float pulsarperiod=10;
+float imagecount=0;
+float spaceshipspeed = 0;
 int earthsize=50;
 color colorreceived;
 float starsnumber=500;
 
 
+
+
+public void lockpulsarbutton(){
+if(!lockpulsarbutton){lockpulsarbutton=true;}
+  else{lockpulsarbutton=false;}
+}
 
 public void locklightbutton(){
 if(!locklightgenerator){locklightgenerator=true;}
@@ -33,10 +43,6 @@ public void movespeed(){
 }
 
 
-public void earthimg(){
-earthimg.resize(earthsize,earthsize);
-println(12);
-}
 
 // init var
 float p = 0;
@@ -53,14 +59,17 @@ color c,o,hearthcolor;
 int addtoi = 1;
 int lightmove;
 int firsti = lightnumbermax+1;
+int[] lightnumberlist= new int[255]; 
+float actuallightnumbermax = lightnumbermax;
+
 
 void setup(){
    size(1500,1000); 
    frameRate(25);
    colorMode(HSB,100);
    
-   earthimg = loadImage("earth.jpg");
-   earthimg.resize(earthsize,earthsize);
+   earthimg = loadImage("earth02.png");
+   earthimg.resize(earthsize*10,earthsize*10);
    p5 = new ControlP5(this);
 
    v1 = new PVector(0,0);
@@ -74,7 +83,11 @@ void setup(){
       stars[i] = new Star();
  }
 
- 
+  
+  
+  for(int i=0;i<=lightnumbermax;i++){
+      lightnumberlist[i] = i;
+ }
  
  
   //interface
@@ -107,10 +120,15 @@ interfaceplace = interfaceplace+20;
      
      p5.addSlider("earthsize")
      .setPosition(10,interfaceplace)
-     .setRange(0,100)
+     .setRange(0,200)
      ;
      interfaceplace = interfaceplace+20;
      
+     p5.addSlider("pulsarperiod")
+     .setPosition(10,interfaceplace)
+     .setRange(1,60)
+     ;
+     interfaceplace = interfaceplace+20;
      
      interfaceplace = interfaceplace+20;
      
@@ -121,14 +139,19 @@ interfaceplace = interfaceplace+20;
      ;
      interfaceplace = interfaceplace+20;
      
+      p5.addButton("lockpulsarbutton")
+     .setValue(0)
+     .setPosition(10,interfaceplace)
+     .setSize(200,19)
+     ;
+     interfaceplace = interfaceplace+20;
      
      
-     
-     myKnobA = p5.addKnob("objectspeed")
+     myKnobA = p5.addKnob("spaceshipspeed")
                .setRange(0,lightspeed)
                .setValue(50)
-               .setPosition(width-110,height-120)
-               .setRadius(50)
+               .setPosition(width-210,height-220)
+               .setRadius(100)
                .setDragDirection(Knob.HORIZONTAL)
                ;
 }
@@ -136,10 +159,57 @@ interfaceplace = interfaceplace+20;
 void draw(){
  background(0);
  
+ //Space to create light
+if(keytopress[0] || locklightgenerator || pulsar){
+ 
+  if(lightnumber>lightnumbermax){
+    lightnumber=0;lightmove=1;
+    for(int i=0;i<lightnumbermax;i++){lightnumberlist[i] = i;}
+     actuallightnumbermax=lightnumbermax;
+    }
+      for(int i=0;i<=actuallightnumbermax;i++){
+         
+        lightnumberlist[i] =lightnumberlist[i]+1;
+        if(lightnumberlist[i]>actuallightnumbermax){lightnumberlist[i]=0;}
+          
+    
+    }
+  
+   L1[lightnumber]= new Light(lightnumber);
+   L1[lightnumber].lightwave(posX,posY,v1.x,v1.y);
+   
+   
+     
+    
+   started=true;
+   lightnumber=lightnumber+1;
+  }
+ 
+ 
  //display the star
   for(int i=0;i<starsnumber;i++){
       stars[i].display();
  }
+ 
+    //move the waves of lights
+ if(started){
+  // boolean first=true;
+  int[] wavelist = new int[lightnumbermax];
+  for(int i=0;i<=lightnumbermax;i++){
+    
+  }
+  
+   for(int i=0;i<=actuallightnumbermax;i++){
+    // if(first){firsti=i+1;first=false;}
+    int y =lightnumberlist[i];
+     if(L1[y] != null){
+      L1[y].display();
+     }else{
+    // println("L1["+i+"] is null");
+   }
+//     if(i==lightnumbermax){i=0;}
+    }
+  }
  
  //move the object and set limits
   posX=posX+v1.x;
@@ -151,17 +221,7 @@ void draw(){
   
   
   
-   //move the waves of lights
- if(started){
-   boolean first=true;
-   for(int i=0;i<=lightnumbermax;i++){
-     if(first){firsti=i+1;first=false;}
-     if(L1[i] != null){
-      L1[i].display();
-     }else{println("L1["+i+"] is null");}
-//     if(i==lightnumbermax){i=0;}
-    }
-  }
+
 
     //create the object
   c = color(50,50,50);
@@ -170,8 +230,8 @@ void draw(){
   hearthcolor=color(100,50,50);
   
   //create earth
-  
-  image(earthimg, width/2, height/2);
+  imageMode(CENTER);
+  image(earthimg, width/2, height/2,earthsize,earthsize);
   // fill(hearthcolor);
   // ellipse(width/2,height/2,earthsize,earthsize);
    
@@ -186,17 +246,17 @@ void draw(){
    fill(colorreceived);
    ellipse(interfacehearth/2,height-(interfacehearth/2),50,50);
   
-// get the keys pressed
-//Space to create light
-if(keytopress[0] || locklightgenerator){
-  if(lightnumber>lightnumbermax){lightnumber=0;lightmove=1;}
-  
-   L1[lightnumber]= new Light(lightnumber);
-   L1[lightnumber].lightwave(posX,posY,v1.x,v1.y);
-   
-   lightnumber=lightnumber+1;
-   started=true;
+//pulsar
+if(lockpulsarbutton){
+  pulsar=false;
+  imagecount=imagecount+1;
+  if(imagecount>=pulsarperiod){
+    pulsar=true;
+    imagecount=0;
   }
+}
+// get the keys pressed
+
 //Up
 if(keytopress[1]){moveY=-movespeed;}
 //Left
@@ -214,9 +274,9 @@ if(keytopress[4]){moveX=movespeed;}
   v1.y=v1.y+moveY;
   //test if the value of object's movement is bigger than lightspeed
   if(speedlimit){
-    objectspeed = dist(v1.x,v1.y,0,0);
-    myKnobA.setValue(objectspeed);
-    if(objectspeed>lightspeed){v1.x=oldv1.x;v1.y=oldv1.y;}
+    spaceshipspeed = dist(v1.x,v1.y,0,0);
+    myKnobA.setValue(spaceshipspeed);
+    if(spaceshipspeed>=lightspeed){v1.x=oldv1.x;v1.y=oldv1.y;}
   }
   //reset
   moveX=0;

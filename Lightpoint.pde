@@ -11,7 +11,7 @@ class LightPoint{
   poslpX=vX;
   poslpY=vY;
   moveangle=angle;
-  //set the movement of the point
+  //set the movement of the point of light
   v2.x=cos(moveangle)*lightspeed;
   v2.y=sin(moveangle)*lightspeed;
   //calulate the color depending on lightspeed and the speed of the object
