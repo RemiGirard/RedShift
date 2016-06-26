@@ -1,7 +1,7 @@
 import controlP5.*;
 ControlP5 p5;
 Light[] L1 = new Light[1000];
-
+Knob myKnobA;
 
 //parameters
 float lightspeed=5;
@@ -9,9 +9,26 @@ float movespeed=0.1;
 int lightnumbermax=50;
 float lightsize = 10;
 float spaceshipsize = 10;
-boolean locklightgenerator=false;
+boolean locklightgenerator=true;
+float objectspeed = 0;
+float hearthsize=30;
+color colorreceived;
+
+
+public void locklightbutton(){
+if(!locklightgenerator){locklightgenerator=true;}
+  else{locklightgenerator=false;}
+}
+
+public void movespeed(){
+  p5.addSlider("movespeed")
+     .setPosition(10,100)
+     .setRange(0,lightspeed)
+     ;
+}
 
 // init var
+float p = 0;
 float posX=100;
 float posY=100;
 PVector v1,oldv1;
@@ -21,7 +38,7 @@ int lightnumber=0;
 float oldv1x,oldv1y;
 boolean[] keytopress = new boolean[9];
 boolean speedlimit = true;
-color c;
+color c,o,hearthcolor;
 int addtoi = 1;
 int lightmove;
 int firsti = lightnumbermax+1;
@@ -39,8 +56,12 @@ void setup(){
      keytopress[i] = false;
   }
  
- float interfaceplace = 10;
+
+ 
+ 
+ 
   //interface
+   float interfaceplace = 10;
 p5.addSlider("lightnumbermax")
      .setPosition(10,10)
      .setRange(0,255)
@@ -51,7 +72,7 @@ interfaceplace = interfaceplace+20;
   
   p5.addSlider("lightspeed")
      .setPosition(10,interfaceplace)
-     .setRange(0,20)
+     .setRange(1,20)
      ;
      interfaceplace = interfaceplace+20;
      
@@ -67,18 +88,32 @@ interfaceplace = interfaceplace+20;
      ;
      interfaceplace = interfaceplace+20;
      
-     p5.addSlider("movespeed")
+     p5.addSlider("hearthsize")
      .setPosition(10,interfaceplace)
-     .setRange(0,lightspeed)
+     .setRange(0,100)
      ;
      interfaceplace = interfaceplace+20;
      
-     p5.addButton("locklightgenerator")
+     
+     interfaceplace = interfaceplace+20;
+     
+     p5.addButton("locklightbutton")
      .setValue(0)
      .setPosition(10,interfaceplace)
      .setSize(200,19)
      ;
      interfaceplace = interfaceplace+20;
+     
+     
+     
+     
+     myKnobA = p5.addKnob("objectspeed")
+               .setRange(0,lightspeed)
+               .setValue(50)
+               .setPosition(width-110,height-120)
+               .setRadius(50)
+               .setDragDirection(Knob.HORIZONTAL)
+               ;
 }
 
 void draw(){
@@ -95,27 +130,34 @@ void draw(){
   
    //move the waves of lights
  if(started){
-   
-  
    boolean first=true;
-   
    for(int i=0;i<=lightnumbermax;i++){
      if(first){firsti=i+1;first=false;}
-    println(i);
      if(L1[i] != null){
       L1[i].display();
      }else{println("L1["+i+"] is null");}
 //     if(i==lightnumbermax){i=0;}
-
     }
-    
-    
+  }
+
     //create the object
   c = color(50,50,50);
   fill(c);
   ellipse(posX,posY,spaceshipsize,spaceshipsize);
-    
-  }
+  hearthcolor=color(100,50,50);
+   fill(hearthcolor);
+   ellipse(width/2,height/2,hearthsize,hearthsize);
+   
+   
+   //interface hearth view
+   c=color(0,0,70);
+   stroke(100);
+   fill(0);
+   float interfacehearth = 150;
+   rect(0,height-interfacehearth,interfacehearth,interfacehearth);
+   noStroke();
+   fill(colorreceived);
+   ellipse(interfacehearth/2,height-(interfacehearth/2),50,50);
   
 // get the keys pressed
 //Space to create light
@@ -145,7 +187,9 @@ if(keytopress[4]){moveX=movespeed;}
   v1.y=v1.y+moveY;
   //test if the value of object's movement is bigger than lightspeed
   if(speedlimit){
-    if(dist(v1.x,v1.y,0,0)>lightspeed){v1.x=oldv1.x;v1.y=oldv1.y;}
+    objectspeed = dist(v1.x,v1.y,0,0);
+    myKnobA.setValue(objectspeed);
+    if(objectspeed>lightspeed){v1.x=oldv1.x;v1.y=oldv1.y;}
   }
   //reset
   moveX=0;

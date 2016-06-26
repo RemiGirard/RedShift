@@ -38,6 +38,9 @@ void display(){
   //test if the point is out of the screen
   if(poslpX<0 || poslpX>width || poslpY<0 || poslpY>height){inscreen=false;}
   }
+  //if the point is on the hearth, get the color
+  if(poslpX<(width/2+hearthsize) && poslpX>(width/2-hearthsize) && poslpY<(height/2+hearthsize) && poslpY>(height/2-hearthsize)){ colorreceived=c;}
+  
 }
 
 }
