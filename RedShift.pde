@@ -60,7 +60,7 @@ int addtoi = 1;
 int lightmove;
 int firsti = lightnumbermax+1;
 int[] lightnumberlist= new int[255]; 
-float actuallightnumbermax = lightnumbermax;
+int actuallightnumbermax = lightnumbermax;
 
 
 void setup(){
@@ -162,15 +162,21 @@ void draw(){
  //Space to create light
 if(keytopress[0] || locklightgenerator || pulsar){
  
-  if(lightnumber>lightnumbermax){
+  if(lightnumber>actuallightnumbermax || actuallightnumbermax!=lightnumbermax){
     lightnumber=0;lightmove=1;
-    for(int i=0;i<lightnumbermax;i++){lightnumberlist[i] = i;}
+    int addtoi =0;
+    for(int i=0;i<255;i++){
+    
+    
+    lightnumberlist[i] = i;
+  
+}
      actuallightnumbermax=lightnumbermax;
     }
       for(int i=0;i<=actuallightnumbermax;i++){
          
         lightnumberlist[i] =lightnumberlist[i]+1;
-        if(lightnumberlist[i]>actuallightnumbermax){lightnumberlist[i]=0;}
+        if(lightnumberlist[i]>255){lightnumberlist[i]=0;}
           
     
     }
@@ -199,14 +205,15 @@ if(keytopress[0] || locklightgenerator || pulsar){
     
   }
   
-   for(int i=0;i<=actuallightnumbermax;i++){
+   for(int i=0;i<255;i++){
     // if(first){firsti=i+1;first=false;}
     int y =lightnumberlist[i];
+    if(y<=lightnumbermax){
      if(L1[y] != null){
       L1[y].display();
-     }else{
-    // println("L1["+i+"] is null");
-   }
+     }
+    }
+     
 //     if(i==lightnumbermax){i=0;}
     }
   }
