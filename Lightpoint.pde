@@ -39,7 +39,7 @@ void display(){
   if(poslpX<0 || poslpX>width || poslpY<0 || poslpY>height){inscreen=false;}
   }
   //if the point is on the hearth, get the color
-  if(poslpX<(width/2+hearthsize) && poslpX>(width/2-hearthsize) && poslpY<(height/2+hearthsize) && poslpY>(height/2-hearthsize)){ colorreceived=c;}
+  if(poslpX<(width/2+lightsize) && poslpX>(width/2-lightsize) && poslpY<(height/2+lightsize) && poslpY>(height/2-lightsize)){ colorreceived=c;}
   
 }
 

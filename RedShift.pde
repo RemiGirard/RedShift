@@ -1,7 +1,10 @@
 import controlP5.*;
 ControlP5 p5;
 Light[] L1 = new Light[1000];
+Star[] stars = new Star[1000];
 Knob myKnobA;
+PImage earthimg;
+
 
 //parameters
 float lightspeed=5;
@@ -11,8 +14,10 @@ float lightsize = 10;
 float spaceshipsize = 10;
 boolean locklightgenerator=true;
 float objectspeed = 0;
-float hearthsize=30;
+int earthsize=50;
 color colorreceived;
+float starsnumber=500;
+
 
 
 public void locklightbutton(){
@@ -25,6 +30,12 @@ public void movespeed(){
      .setPosition(10,100)
      .setRange(0,lightspeed)
      ;
+}
+
+
+public void earthimg(){
+earthimg.resize(earthsize,earthsize);
+println(12);
 }
 
 // init var
@@ -44,11 +55,14 @@ int lightmove;
 int firsti = lightnumbermax+1;
 
 void setup(){
-   size(1000,1000); 
+   size(1500,1000); 
    frameRate(25);
    colorMode(HSB,100);
    
+   earthimg = loadImage("earth.jpg");
+   earthimg.resize(earthsize,earthsize);
    p5 = new ControlP5(this);
+
    v1 = new PVector(0,0);
    oldv1 = new PVector(0,0);
  
@@ -56,6 +70,9 @@ void setup(){
      keytopress[i] = false;
   }
  
+ for(int i=0;i<starsnumber;i++){
+      stars[i] = new Star();
+ }
 
  
  
@@ -88,7 +105,7 @@ interfaceplace = interfaceplace+20;
      ;
      interfaceplace = interfaceplace+20;
      
-     p5.addSlider("hearthsize")
+     p5.addSlider("earthsize")
      .setPosition(10,interfaceplace)
      .setRange(0,100)
      ;
@@ -118,6 +135,12 @@ interfaceplace = interfaceplace+20;
 
 void draw(){
  background(0);
+ 
+ //display the star
+  for(int i=0;i<starsnumber;i++){
+      stars[i].display();
+ }
+ 
  //move the object and set limits
   posX=posX+v1.x;
   posY=posY+v1.y;
@@ -145,8 +168,12 @@ void draw(){
   fill(c);
   ellipse(posX,posY,spaceshipsize,spaceshipsize);
   hearthcolor=color(100,50,50);
-   fill(hearthcolor);
-   ellipse(width/2,height/2,hearthsize,hearthsize);
+  
+  //create earth
+  
+  image(earthimg, width/2, height/2);
+  // fill(hearthcolor);
+  // ellipse(width/2,height/2,earthsize,earthsize);
    
    
    //interface hearth view
