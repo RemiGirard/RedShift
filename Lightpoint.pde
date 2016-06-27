@@ -5,6 +5,7 @@ class LightPoint{
   float colorX,colorY;
   color c;
   boolean inscreen = true;
+  float colorhue;
   
 
  LightPoint(float vX,float vY,float angle,float v1x,float v1y){ 
@@ -17,7 +18,7 @@ class LightPoint{
   //calulate the color depending on lightspeed and the speed of the object
   colorX=(v2.x-v1x)/2;
   colorY=(v2.y-v1y)/2;
-  float colorhue = dist(colorX,colorY,0,0);
+  colorhue = dist(colorX,colorY,0,0);
   //inverse the redshift and set in a 100 scale
   colorhue = (1-colorhue/lightspeed)*100;
   c = color(colorhue,50,50);
@@ -39,7 +40,7 @@ void display(){
   if(poslpX<0 || poslpX>width || poslpY<0 || poslpY>height){inscreen=false;}
   }
   //if the point is on the hearth, get the color
-  if(poslpX<(width/2+lightsize) && poslpX>(width/2-lightsize) && poslpY<(height/2+lightsize) && poslpY>(height/2-lightsize)){ colorreceived=c;}
+  if(poslpX<(width/2+lightsize) && poslpX>(width/2-lightsize) && poslpY<(height/2+lightsize) && poslpY>(height/2-lightsize)){ colorreceived=c;colorhuereceived=colorhue;}
   
 }
 

@@ -6,7 +6,6 @@ Knob myKnobA;
 PImage earthimg;
 
 
-
 //parameters
 float lightspeed=5;
 float movespeed=0.1;
@@ -51,6 +50,7 @@ float posX=100;
 float posY=100;
 PVector v1,oldv1;
 float moveX,moveY;
+boolean started =false;
 int lightnumber=0;
 float oldv1x,oldv1y;
 boolean[] keytopress = new boolean[9];
@@ -62,7 +62,11 @@ int firsti = lightnumbermax+1;
 int[] lightnumberlist= new int[256]; 
 int actuallightnumbermax = 0;
 int numberlist =0;
-
+int Y_AXIS = 1;
+int X_AXIS = 2;
+color b1, b2, c1, c2;
+float colorhuereceived=50;
+float coloractu = 50;
 
 
 void setup(){
@@ -70,9 +74,8 @@ void setup(){
    frameRate(25);
    colorMode(HSB,100);
    
-
-
-  noLoop();
+   c1 = color(1, 60, 60);
+  c2 = color(99, 60, 60);
    
    earthimg = loadImage("earth02.png");
    earthimg.resize(earthsize*10,earthsize*10);
@@ -91,6 +94,7 @@ void setup(){
 
  for(int i=0;i<=255;i++){
    lightnumberlist[i]=255-i;
+   print(i+":"+lightnumberlist[i]+"_");
    }
   
   
@@ -167,22 +171,27 @@ void draw(){
  
  //Space to create light
 if(keytopress[0] || locklightgenerator || pulsar){
-  //set the number of light to display
+
 if(actuallightnumbermax<lightnumbermax){
    actuallightnumbermax=actuallightnumbermax+1; 
 }else{
   actuallightnumbermax=lightnumbermax;
 }
-  // inc the list and set the first
+
    for(int i=255;i>0;i--){
    lightnumberlist[i]=lightnumberlist[i-1];
    }
     lightnumberlist[0]=lightnumberlist[255];
 
-// create the Light with the first number of the list
+
    L1[lightnumberlist[0]]= new Light(lightnumberlist[0]);
    L1[lightnumberlist[0]].lightwave(posX,posY,v1.x,v1.y);
-  
+   
+   
+   
+
+ 
+   started=true;
 lightnumber=lightnumber+1;
   }
  
@@ -194,12 +203,17 @@ lightnumber=lightnumber+1;
    
     //move the waves of lights
    for(int i=0;i<=actuallightnumbermax;i++){
-     //move in order of the list to keep z display perfect
+    // if(first){firsti=i+1;first=false;}
+    
     int y = lightnumberlist[i];
+    
      if(L1[y] != null){
       L1[y].display();
      }
-   }
+
+     
+//     if(i==lightnumbermax){i=0;}
+    }
   
  
  //move the object and set limits
@@ -223,6 +237,8 @@ lightnumber=lightnumber+1;
   //create earth
   imageMode(CENTER);
   image(earthimg, width/2, height/2,earthsize,earthsize);
+  // fill(hearthcolor);
+  // ellipse(width/2,height/2,earthsize,earthsize);
    
    
    //interface hearth view
@@ -234,13 +250,18 @@ lightnumber=lightnumber+1;
    noStroke();
    fill(colorreceived);
    ellipse(interfaceearth/2,height-(interfaceearth/2),50,50);
-   
-
-    
-
   
-      
- 
+  
+  // Foreground
+
+  setGradient(interfaceearth, height-interfaceearth, interfaceearth*3, interfaceearth, c2, c1, X_AXIS);
+  float colorhuedisplay = map(colorhuereceived,100,0,interfaceearth,interfaceearth*4);
+  if(colorhuedisplay>coloractu){coloractu=coloractu+5;}
+  if(colorhuedisplay<coloractu){coloractu=coloractu-5;}
+  strokeWeight(5);
+  rect(coloractu,height-interfaceearth-10,interfaceearth/3,interfaceearth+10);
+  
+  
   
 //pulsar
 if(lockpulsarbutton){
@@ -251,9 +272,8 @@ if(lockpulsarbutton){
     imagecount=0;
   }
 }
+// get the keys pressed
 
-
-// get the keys pressed for movement
 //Up
 if(keytopress[1]){moveY=-movespeed;}
 //Left
@@ -275,7 +295,7 @@ if(keytopress[4]){moveX=movespeed;}
     myKnobA.setValue(spaceshipspeed);
     if(spaceshipspeed>=lightspeed){v1.x=oldv1.x;v1.y=oldv1.y;}
   }
-  //reset changes of object movement
+  //reset
   moveX=0;
   moveY=0;
   
@@ -283,7 +303,6 @@ if(keytopress[4]){moveX=movespeed;}
  
   
 }
-// END DRAW
 
 void keyPressed(){
   if(key=='w' || key=='W'){keytopress[1]=true;}
@@ -301,5 +320,24 @@ void keyReleased(){
   if(key=='m' || key=='M'){keytopress[0]=false;}
 }
 
+void setGradient(int x, int y, float w, float h, color c1, color c2, int axis ) {
 
+  noFill();
 
+  if (axis == Y_AXIS) {  // Top to bottom gradient
+    for (int i = y; i <= y+h; i++) {
+      float inter = map(i, y, y+h, 0, 1);
+      color c = lerpColor(c1, c2, inter);
+      stroke(c);
+      line(x, i, x+w, i);
+    }
+  }  
+  else if (axis == X_AXIS) {  // Left to right gradient
+    for (int i = x; i <= x+w; i++) {
+      float inter = map(i, x, x+w, 0, 1);
+      color c = lerpColor(c1, c2, inter);
+      stroke(c);
+      line(i, y, i, y+h);
+    }
+  }
+}

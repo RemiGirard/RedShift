@@ -1,5 +1,5 @@
 class Light {
-  int lightpointsmax = 1000*(255+1);
+  int lightpointsmax = 1000*(actuallightnumbermax+1);
   LightPoint[] myLightpoints = new LightPoint[lightpointsmax];
   int number;
  Light(int lightnumber){ 
