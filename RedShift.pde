@@ -66,7 +66,7 @@ int Y_AXIS = 1;
 int X_AXIS = 2;
 color b1, b2, c1, c2;
 float colorhuereceived=50;
-float coloractu = 50;
+float coloractu = 400;
 
 
 void setup(){
@@ -94,7 +94,6 @@ void setup(){
 
  for(int i=0;i<=255;i++){
    lightnumberlist[i]=255-i;
-   print(i+":"+lightnumberlist[i]+"_");
    }
   
   
@@ -252,14 +251,20 @@ lightnumber=lightnumber+1;
    ellipse(interfaceearth/2,height-(interfaceearth/2),50,50);
   
   
-  // Foreground
+  // Color detection
 
-  setGradient(interfaceearth, height-interfaceearth, interfaceearth*3, interfaceearth, c2, c1, X_AXIS);
-  float colorhuedisplay = map(colorhuereceived,100,0,interfaceearth,interfaceearth*4);
+  setGradient(interfaceearth, height-interfaceearth, interfaceearth*3+interfaceearth/6, interfaceearth, c2, c1, X_AXIS);
+  float colorhuedisplay = map(colorhuereceived,100,0,interfaceearth+interfaceearth/3,interfaceearth*4);
+  println(coloractu);
   if(colorhuedisplay>coloractu){coloractu=coloractu+5;}
   if(colorhuedisplay<coloractu){coloractu=coloractu-5;}
   strokeWeight(5);
-  rect(coloractu,height-interfaceearth-10,interfaceearth/3,interfaceearth+10);
+  stroke(50,50,50);
+  rect(interfaceearth*7.5/3,height-interfaceearth-10,interfaceearth/3,interfaceearth+10);
+  stroke(1,50,50);
+  rect(coloractu-(interfaceearth/3)/2,height-interfaceearth-10,interfaceearth/3,interfaceearth+10);
+
+  
   
   
   
