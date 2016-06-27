@@ -9,7 +9,7 @@ PImage earthimg;
 //parameters
 float lightspeed=5;
 float movespeed=0.1;
-int lightnumbermax=50;
+int lightnumbermax=30;
 float lightsize = 10;
 float spaceshipsize = 10;
 boolean locklightgenerator=true;
@@ -59,8 +59,9 @@ color c,o,hearthcolor;
 int addtoi = 1;
 int lightmove;
 int firsti = lightnumbermax+1;
-int[] lightnumberlist= new int[255]; 
-int actuallightnumbermax = lightnumbermax;
+int[] lightnumberlist= new int[256]; 
+int actuallightnumbermax = 0;
+int numberlist =0;
 
 
 void setup(){
@@ -83,12 +84,13 @@ void setup(){
       stars[i] = new Star();
  }
 
+ for(int i=0;i<=255;i++){
+   lightnumberlist[i]=255-i;
+   print(i+":"+lightnumberlist[i]+"_");
+   }
   
   
-  for(int i=0;i<=lightnumbermax;i++){
-      lightnumberlist[i] = i;
- }
- 
+
  
   //interface
    float interfaceplace = 10;
@@ -161,34 +163,28 @@ void draw(){
  
  //Space to create light
 if(keytopress[0] || locklightgenerator || pulsar){
- 
-  if(lightnumber>actuallightnumbermax || actuallightnumbermax!=lightnumbermax){
-    lightnumber=0;lightmove=1;
-    int addtoi =0;
-    for(int i=0;i<255;i++){
-    
-    
-    lightnumberlist[i] = i;
-  
+
+if(actuallightnumbermax<lightnumbermax){
+   actuallightnumbermax=actuallightnumbermax+1; 
+}else{
+  actuallightnumbermax=lightnumbermax;
 }
-     actuallightnumbermax=lightnumbermax;
-    }
-      for(int i=0;i<=actuallightnumbermax;i++){
-         
-        lightnumberlist[i] =lightnumberlist[i]+1;
-        if(lightnumberlist[i]>255){lightnumberlist[i]=0;}
-          
-    
-    }
-  
-   L1[lightnumber]= new Light(lightnumber);
-   L1[lightnumber].lightwave(posX,posY,v1.x,v1.y);
+
+   for(int i=255;i>0;i--){
+   lightnumberlist[i]=lightnumberlist[i-1];
+   }
+    lightnumberlist[0]=lightnumberlist[255];
+
+
+   L1[lightnumberlist[0]]= new Light(lightnumberlist[0]);
+   L1[lightnumberlist[0]].lightwave(posX,posY,v1.x,v1.y);
    
    
-     
-    
+   
+
+ 
    started=true;
-   lightnumber=lightnumber+1;
+lightnumber=lightnumber+1;
   }
  
  
@@ -196,27 +192,21 @@ if(keytopress[0] || locklightgenerator || pulsar){
   for(int i=0;i<starsnumber;i++){
       stars[i].display();
  }
- 
+   
     //move the waves of lights
- if(started){
-  // boolean first=true;
-  int[] wavelist = new int[lightnumbermax];
-  for(int i=0;i<=lightnumbermax;i++){
-    
-  }
-  
-   for(int i=0;i<255;i++){
+   for(int i=0;i<=actuallightnumbermax;i++){
     // if(first){firsti=i+1;first=false;}
-    int y =lightnumberlist[i];
-    if(y<=lightnumbermax){
+    
+    int y = lightnumberlist[i];
+    
      if(L1[y] != null){
       L1[y].display();
      }
-    }
+
      
 //     if(i==lightnumbermax){i=0;}
     }
-  }
+  
  
  //move the object and set limits
   posX=posX+v1.x;
