@@ -13,8 +13,8 @@ class LightPoint{
   poslpY=vY;
   moveangle=angle;
   //set the movement of the point of light
-  v2.x=cos(moveangle)*lightspeed;
-  v2.y=sin(moveangle)*lightspeed;
+  v2.x=cos(map(angle,0,360,0,PI*2))*lightspeed;
+  v2.y=sin(map(angle,0,360,0,PI*2))*lightspeed;
   //calulate the color depending on lightspeed and the speed of the object
   colorX=(v2.x-v1x)/2;
   colorY=(v2.y-v1y)/2;
@@ -40,7 +40,7 @@ void display(){
   if(poslpX<0 || poslpX>width || poslpY<0 || poslpY>height){inscreen=false;}
   }
   //if the point is on the hearth, get the color
-  if(poslpX<(width/2+lightsize) && poslpX>(width/2-lightsize) && poslpY<(height/2+lightsize) && poslpY>(height/2-lightsize)){ colorreceived=c;colorhuereceived=colorhue;}
+  if(poslpX<(width/2+40) && poslpX>(width/2-40) && poslpY<(height/2+40) && poslpY>(height/2-40)){ colorreceived=c;colorhuereceived=colorhue;anglereceived=moveangle;}
   
 }
 
