@@ -16,30 +16,26 @@ PImage earthimg;
 int lightnumbermax=30;
 float lightsize = 10;
 float lightspeed=5;
-
-float movespeed=0.1;
-float spaceshipsize = 10;
-
+int lightprecision=360;
 boolean locklightgenerator=true;
-boolean lockpulsarbutton=true;
-boolean pulsar=false;
-float pulsarspeed=0.1;
 
-float displayspaceshipspeed = 0;
+float pulsarspeed=0.1;
+boolean lockpulsarbutton=true;
+
+float generalredshiftvalue = 0.1;
+boolean generalredshift=true;
+
+float spiralespeed=10;
+int spiralenumber=1;
+boolean spirale=true;
+
+float spaceshipsize = 10;
 int earthsize=50;
 
-float starsnumber=5000;
-float movingstarsnumber=50;
-int interfaceearth = 150;
+float displayspaceshipspeed = 0;
 
-boolean generalredshift=true;
-float generalredshiftvalue = 0.1;
-int lightprecision=360;
-float spiralespeed=10;
-boolean spirale=true;
-int spiralenumber=1;
-
-
+//preset
+boolean[] preset=new boolean[10];
 
 
 
@@ -94,8 +90,12 @@ float angleactu =0;
 float anglemax,anglemin;
 float spaceshipspeed = 0;
 String approachortakeaway="no info ";
-
-
+float movespeed=0.5;
+float pointangle=0;
+boolean pulsar=false;
+float starsnumber=5000;
+float movingstarsnumber=50;
+int interfaceearth = 150;
 
 
 
@@ -108,6 +108,8 @@ void setup(){
    //set gradient color
   c1 = color(0, 60, 60);
   c2 = color(80, 60, 60);
+  
+  
    
    //center image
    earthimg = loadImage("earth02.png");
@@ -141,6 +143,8 @@ void setup(){
  
   //interface
    float interfaceplace = 10;
+   
+     // light
 p5.addSlider("lightnumbermax")
      .setPosition(10,10)
      .setRange(0,255)
@@ -160,43 +164,57 @@ p5.addSlider("lightsize")
      ;
      interfaceplace = interfaceplace+20;
      
-     
-     
-     p5.addSlider("spaceshipsize")
-     .setPosition(10,interfaceplace)
-     .setRange(0,100)
-     ;
-     interfaceplace = interfaceplace+20;
-     
-     p5.addSlider("earthsize")
-     .setPosition(10,interfaceplace)
-     .setRange(0,200)
-     ;
-     interfaceplace = interfaceplace+20;
-     
-     p5.addSlider("pulsarspeed")
-     .setPosition(10,interfaceplace)
-     .setRange(0.001,1)
-     ;
-     interfaceplace = interfaceplace+20;
-     
-     p5.addSlider("movespeed")
-     .setPosition(10,interfaceplace)
-     .setRange(0,lightspeed)
-     ;
-     interfaceplace = interfaceplace+20;
-     
-     p5.addSlider("generalredshiftvalue")
-     .setPosition(10,interfaceplace)
-     .setRange(0,1)
-     ;
-     interfaceplace = interfaceplace+20;
-     
      p5.addSlider("lightprecision")
      .setPosition(10,interfaceplace)
      .setRange(1,1000)
      ;
      interfaceplace = interfaceplace+20;
+     
+     p5.addButton("locklightbutton")
+     .setValue(0)
+     .setPosition(10,interfaceplace)
+     .setSize(200,19)
+     ;
+     interfaceplace = interfaceplace+40;
+     
+     
+     //pulsar
+      p5.addSlider("pulsarspeed")
+     .setPosition(10,interfaceplace)
+     .setRange(0.001,1)
+     ;
+     interfaceplace = interfaceplace+20;
+     
+       p5.addButton("lockpulsarbutton")
+     .setValue(0)
+     .setPosition(10,interfaceplace)
+     .setSize(200,19)
+     ;
+     interfaceplace = interfaceplace+40;
+     
+      p5.addSlider("generalredshiftvalue")
+     .setPosition(10,interfaceplace)
+     .setRange(0,1)
+     ;
+     interfaceplace = interfaceplace+20;
+     
+     p5.addButton("generalredshift")
+     .setValue(0)
+     .setPosition(10,interfaceplace)
+     .setSize(200,19)
+     ;
+     interfaceplace = interfaceplace+40;
+     
+     
+     
+     
+    
+     
+ 
+     
+    
+     
+     
      
      p5.addSlider("spiralespeed")
      .setPosition(10,interfaceplace)
@@ -210,36 +228,31 @@ p5.addSlider("lightsize")
      ;
      interfaceplace = interfaceplace+20;
      
-     p5.addButton("locklightbutton")
-     .setValue(0)
-     .setPosition(10,interfaceplace)
-     .setSize(200,19)
-     ;
-     interfaceplace = interfaceplace+20;
      
-      p5.addButton("lockpulsarbutton")
-     .setValue(0)
-     .setPosition(10,interfaceplace)
-     .setSize(200,19)
-     ;
-     interfaceplace = interfaceplace+20;
      
-     p5.addButton("generalredshift")
-     .setValue(0)
-     .setPosition(10,interfaceplace)
-     .setSize(200,19)
-     ;
-     interfaceplace = interfaceplace+20;
+    
+     
+     
      
       p5.addButton("spirale")
      .setValue(0)
      .setPosition(10,interfaceplace)
      .setSize(200,19)
      ;
-     interfaceplace = interfaceplace+20;
+     interfaceplace = interfaceplace+40;
      
   
+     p5.addSlider("spaceshipsize")
+     .setPosition(10,interfaceplace)
+     .setRange(0,100)
+     ;
+     interfaceplace = interfaceplace+20;
      
+     p5.addSlider("earthsize")
+     .setPosition(10,interfaceplace)
+     .setRange(0,200)
+     ;
+     interfaceplace = interfaceplace+20;
      
      myKnobA = p5.addKnob("displayspaceshipspeed")
                .setRange(0,1)
@@ -305,10 +318,12 @@ if(keytopress[0] || locklightgenerator || pulsar){
   strokeWeight(1);
   ellipse(posX,posY,spaceshipsize,spaceshipsize);
  
- //display the direction of the spaceship
+ //display the direction of the spaceship's power
   fill(0,50,0);
   noStroke();
-  ellipse(posX+moveX*spaceshipsize*2,posY+moveY*spaceshipsize*2,spaceshipsize/2,spaceshipsize/2);
+  ellipse(posX+(Math.signum(moveX))*spaceshipsize/5,posY+(Math.signum(moveY))*spaceshipsize/5,spaceshipsize/2,spaceshipsize/2);
+
+  
 
  
  //move the spaceship and set screen limits
@@ -325,7 +340,7 @@ if(keytopress[0] || locklightgenerator || pulsar){
 
 
   
-  //create earth
+  //display earth
   imageMode(CENTER);
   image(earthimg, width/2, height/2,earthsize,earthsize);
    
@@ -342,8 +357,10 @@ if(keytopress[0] || locklightgenerator || pulsar){
     // Move the stars deppending on light received
    float phi = Math.abs(anglereceived - angleactu);      
    movingstarspeed = phi > PI ? TWO_PI - phi : phi;
+   
    int sign = (anglereceived - angleactu >= 0 && anglereceived - angleactu <= PI) || (anglereceived - angleactu <= -PI && anglereceived- angleactu>= -TWO_PI) ? 1 : -1;  movingstarspeed *= sign;
    movingstarspeed = movingstarspeed/10;
+  
    angleactu=angleactu+movingstarspeed;
    if(angleactu<0){angleactu=angleactu+TWO_PI;}
    if(angleactu>=TWO_PI){angleactu=angleactu-TWO_PI;}
@@ -369,6 +386,7 @@ if(keytopress[0] || locklightgenerator || pulsar){
    //smooth the movement
     float addtocoloractu;
     if(colorhuereceived!=coloractu){
+      
       addtocoloractu=(colorhuereceived-coloractu)/10;
       coloractu=coloractu+addtocoloractu;
       if(addtocoloractu<=1 && addtocoloractu>=1){coloractu=colorhuereceived;}
@@ -425,6 +443,8 @@ if(lockpulsarbutton){
   //reset spaceship movement before check if key pressed
   moveX=0;
   moveY=0;
+  //set the power of the spaceship
+  movespeed = lightspeed/20;
 
 // get the keys pressed
 //Up

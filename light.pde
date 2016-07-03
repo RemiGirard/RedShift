@@ -7,7 +7,7 @@ class Light {
  }
 
 void lightwave(float coX, float coY,float v1x, float v1y){
-float pointangle=0;
+
 
  if(!spirale){
    // create light points in every directions
@@ -15,6 +15,7 @@ float pointangle=0;
       myLightpoints[i]= new LightPoint(coX,coY,pointangle,v1x,v1y,number);
       pointangle=pointangle+TWO_PI/lightprecision;
     }
+    pointangle=0;
  }else{
    // create light points for spirale
      for(int i=0;i<=spiralenumber;i++){
@@ -22,6 +23,7 @@ float pointangle=0;
        pointangle=pointangle+TWO_PI/spiralenumber;
      }
      pointangle=pointangle+(TWO_PI/360)*spiralespeed;
+     if(pointangle>=TWO_PI){pointangle=pointangle-TWO_PI;}
  }
 }
 
@@ -31,7 +33,7 @@ void display(){
     if(myLightpoints[i] != null){
     myLightpoints[i].display();
     }else{
-    println("myLightpoints["+i+"] is null");
+    // println("myLightpoints["+i+"] is null");
   }
   }
 }
