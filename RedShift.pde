@@ -24,8 +24,15 @@ color colorreceived;
 float starsnumber=5000;
 float movingstarsnumber=50;
 int interfaceearth = 150;
-float anglereceived =-1;
-float angleactu,anglemax,anglemin;
+float anglereceived =0;
+float angleactu =0;
+float anglemax,anglemin;
+boolean generalredshift=true;
+float generalredshiftvalue = 0.1;
+int lightprecision=360;
+float spiralespeed=10;
+boolean spirale=true;
+int spiralenumber=4;
 
 float test=0;
 
@@ -42,7 +49,15 @@ if(!locklightgenerator){locklightgenerator=true;}
   else{locklightgenerator=false;}
 }
 
+public void generalredshift(){
+if(!generalredshift){generalredshift=true;}
+  else{generalredshift=false;}
+}
 
+public void spirale(){
+if(!spirale){spirale=true;}
+  else{spirale=false;}
+}
 
 
 
@@ -50,7 +65,7 @@ if(!locklightgenerator){locklightgenerator=true;}
 float p = 0;
 float posX=100;
 float posY=100;
-PVector v1,oldv1;
+PVector v1,oldv1,v3,oldv3;
 float moveX,moveY;
 boolean started =false;
 int lightnumber=0;
@@ -68,17 +83,20 @@ int Y_AXIS = 1;
 int X_AXIS = 2;
 color b1, b2, c1, c2;
 float colorhuereceived=50;
-float coloractu = 338.5;
+float coloractu = 50;
 float addtoangleactu,movingstarspeed;
 
+
+ float pointangle=0;
+float spiralepointamgle=0;
 
 void setup(){
    size(1500,1000); 
    frameRate(24);
    colorMode(HSB,100);
    
-   c1 = color(1, 60, 60);
-  c2 = color(99, 60, 60);
+   c1 = color(0, 60, 60);
+  c2 = color(80, 60, 60);
    
    earthimg = loadImage("earth02.png");
    earthimg.resize(earthsize*10,earthsize*10);
@@ -109,7 +127,7 @@ for(int i=0;i<movingstarsnumber;i++){
    float interfaceplace = 10;
 p5.addSlider("lightnumbermax")
      .setPosition(10,10)
-     .setRange(0,100)
+     .setRange(0,255)
      ;
 interfaceplace = interfaceplace+20;
 
@@ -151,6 +169,24 @@ interfaceplace = interfaceplace+20;
      ;
      interfaceplace = interfaceplace+20;
      
+     p5.addSlider("generalredshiftvalue")
+     .setPosition(10,interfaceplace)
+     .setRange(0,1)
+     ;
+     interfaceplace = interfaceplace+20;
+     
+     p5.addSlider("lightprecision")
+     .setPosition(10,interfaceplace)
+     .setRange(1,1000)
+     ;
+     interfaceplace = interfaceplace+20;
+     
+     p5.addSlider("spiralespeed")
+     .setPosition(10,interfaceplace)
+     .setRange(0,10)
+     ;
+     interfaceplace = interfaceplace+20;
+     
      p5.addButton("locklightbutton")
      .setValue(0)
      .setPosition(10,interfaceplace)
@@ -159,6 +195,20 @@ interfaceplace = interfaceplace+20;
      interfaceplace = interfaceplace+20;
      
       p5.addButton("lockpulsarbutton")
+     .setValue(0)
+     .setPosition(10,interfaceplace)
+     .setSize(200,19)
+     ;
+     interfaceplace = interfaceplace+20;
+     
+     p5.addButton("generalredshift")
+     .setValue(0)
+     .setPosition(10,interfaceplace)
+     .setSize(200,19)
+     ;
+     interfaceplace = interfaceplace+20;
+     
+      p5.addButton("spirale")
      .setValue(0)
      .setPosition(10,interfaceplace)
      .setSize(200,19)
@@ -232,7 +282,7 @@ if(keytopress[0] || locklightgenerator || pulsar){
     }
   
   //display the spaceship
-  c = color(50,50,0);
+  c = color(50,50,50);
   fill(c);
   stroke(0,0,50);
   strokeWeight(1);
@@ -240,7 +290,7 @@ if(keytopress[0] || locklightgenerator || pulsar){
   hearthcolor=color(100,50,50);
  
  //display the direction of the spaceship
-  fill(0,50,50);
+  fill(0,50,0);
   noStroke();
   ellipse(posX+moveX*spaceshipsize*2,posY+moveY*spaceshipsize*2,spaceshipsize/2,spaceshipsize/2);
 
@@ -275,39 +325,24 @@ if(keytopress[0] || locklightgenerator || pulsar){
    noStroke();
    
    
-println("START");
-   if(angleactu!=-1){
-   anglemax = max(angleactu,anglereceived);
-   println("anglemax="+anglemax);
-   anglemin = min(angleactu,anglereceived);
-   println("anglemin="+anglemin);
-
-     if(anglereceived-angleactu<=180){
-       movingstarspeed=anglereceived-angleactu;
-       println("+");
-     }else{
-       movingstarspeed=360+abs(anglereceived-angleactu);
-       movingstarspeed=movingstarspeed*(anglereceived-angleactu)/abs(anglereceived-angleactu);
-        println("-");
-     }
-     
-     movingstarspeed=movingstarspeed/10;
-     println("movingstarspeed/10="+movingstarspeed);
-     angleactu=angleactu+movingstarspeed;
-     println("angleactu="+angleactu);
-     if(angleactu<0){angleactu=360+angleactu;println("angleactu(if<0)="+angleactu);}
-      
-     if(movingstarspeed<=0.1 && movingstarspeed>=-0.1){angleactu=anglereceived;println("angleactu(1-1)="+angleactu);}
-      
-
-   }else{
-     angleactu=anglereceived;
-   }
+  
    
-      for(int i=0;i<movingstarsnumber;i++){
-        
+   float phi = Math.abs(anglereceived - angleactu);       // This is either the distance or 360 - distance
+   movingstarspeed = phi > 180 ? 360 - phi : phi;
+   int sign = (anglereceived - angleactu >= 0 && anglereceived - angleactu <= 180) || (anglereceived - angleactu <= -180 && anglereceived- angleactu>= -360) ? 1 : -1;  movingstarspeed *= sign;
+   movingstarspeed = movingstarspeed/10;
+   angleactu=angleactu+movingstarspeed;
+   if(angleactu<0){angleactu=angleactu+360;}
+   if(angleactu>=360){angleactu=angleactu-360;}
+
+   
+   
+  
+  for(int i=0;i<movingstarsnumber;i++){
     movingstars[i].moveandreplace(movingstarspeed);
      }
+
+   
    
    fill(colorreceived);
    ellipse(interfaceearth/2,height-(interfaceearth/2),50,50);
@@ -319,24 +354,33 @@ println("START");
   int interfacecolor=100;
   int startinterfacecolor=interfaceearth+1;
   float selectcolorsize=interfacecolor/3;
-  setGradient(startinterfacecolor, height-interfacecolor, interfacecolor*4, interfacecolor, c2, c1, X_AXIS);
-  float colorhuedisplay = map(colorhuereceived,100,0,startinterfacecolor,startinterfacecolor+interfacecolor*4-selectcolorsize);
-  
-  //smooth the movement
+  setGradient(startinterfacecolor, height-interfacecolor, interfacecolor*4, interfacecolor, c2, c1);
+ float basicpos=map(50,85,0,startinterfacecolor,startinterfacecolor+interfacecolor*4-selectcolorsize);
+ 
+ 
+   //smooth the movement
   float addtocoloractu;
-  if(colorhuedisplay!=coloractu){
-    addtocoloractu=(colorhuedisplay-coloractu)/10;
+  if(colorhuereceived!=coloractu){
+    addtocoloractu=(colorhuereceived-coloractu)/10;
     coloractu=coloractu+addtocoloractu;
-    if(addtocoloractu<=1 && addtocoloractu>=1){coloractu=colorhuedisplay;}
+    if(addtocoloractu<=1 && addtocoloractu>=1){coloractu=colorhuereceived;}
   }
+ 
+  float colorhuedisplay = map(coloractu,85,0,startinterfacecolor,startinterfacecolor+interfacecolor*4-selectcolorsize);
+  
+  
+  
+  
+
 
   //display basic and color and updated color
+  noFill();
   strokeWeight(5);
   stroke(50,50,50);
-  float basicpos=map(50,100,0,startinterfacecolor,startinterfacecolor+interfacecolor*4-selectcolorsize);
+ 
   rect(basicpos,height-interfacecolor-10,selectcolorsize,interfacecolor+10);
   stroke(1,50,50);
-  rect(coloractu,height-interfacecolor-10,selectcolorsize,interfacecolor+10);
+  rect(colorhuedisplay,height-interfacecolor-10,selectcolorsize,interfacecolor+10);
 
   
   
@@ -369,9 +413,7 @@ if(keytopress[3]){moveY=movespeed;}
 //Right
 if(keytopress[4]){moveX=movespeed;}
   
-  //get the value of object's movement in case it is bigger than the lightspeed
-  oldv1.x=v1.x;
-  oldv1.y=v1.y;
+
   //update the object's movement
   v1.x=v1.x+moveX;
   v1.y=v1.y+moveY;
@@ -379,7 +421,7 @@ if(keytopress[4]){moveX=movespeed;}
   if(speedlimit){
     spaceshipspeed = dist(v1.x,v1.y,0,0);
     myKnobA.setValue(spaceshipspeed);
-    if(spaceshipspeed>=lightspeed){v1.x=oldv1.x;v1.y=oldv1.y;}
+    v1.limit(lightspeed);
   }
   
  
@@ -405,24 +447,11 @@ void keyReleased(){
   if(key=='m' || key=='M'){keytopress[0]=false;}
 }
 
-void setGradient(int x, int y, float w, float h, color c1, color c2, int axis ) {
-
-  noFill();
-
-  if (axis == Y_AXIS) {  // Top to bottom gradient
-    for (int i = y; i <= y+h; i++) {
-      float inter = map(i, y, y+h, 0, 1);
-      color c = lerpColor(c1, c2, inter);
-      stroke(c);
-      line(x, i, x+w, i);
-    }
-  }  
-  else if (axis == X_AXIS) {  // Left to right gradient
+void setGradient(int x, int y, float w, float h, color c1, color c2) {
     for (int i = x; i <= x+w; i++) {
       float inter = map(i, x, x+w, 0, 1);
       color c = lerpColor(c1, c2, inter);
       stroke(c);
       line(i, y, i, y+h);
     }
-  }
 }
