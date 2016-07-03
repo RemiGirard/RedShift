@@ -1,42 +1,37 @@
 class Light {
-  int lightpointsmax = 1000*(255+1);
-  LightPoint[] myLightpoints = new LightPoint[lightpointsmax];
+  LightPoint[] myLightpoints = new LightPoint[1000+1];
   int number;
- Light(int lightnumber){ 
-  number=lightnumber;
   
- 
-}
+ Light(int lightnumber){ 
+   number=lightnumber;
+ }
 
 void lightwave(float coX, float coY,float v1x, float v1y){
+float pointangle=0;
 
-
- 
- if(spirale){
-   for(int i=0;i<=spiralenumber;i++){
-   int y = number*1000+1;
-   println(i);
- myLightpoints[y]= new LightPoint(coX,coY,spiralepointamgle,v1x,v1y);
- spiralepointamgle=spiralepointamgle+TWO_PI/spiralenumber;
-   }
-   spiralepointamgle=spiralepointamgle+(TWO_PI/360)*spiralespeed;
- }else{
-    for(int i=0;i<=lightprecision;i++){
-    int y = number*1000+i;
-      myLightpoints[y]= new LightPoint(coX,coY,pointangle,v1x,v1y);
+ if(!spirale){
+   // create light points in every directions
+   for(int i=0;i<=lightprecision;i++){
+      myLightpoints[i]= new LightPoint(coX,coY,pointangle,v1x,v1y,number);
       pointangle=pointangle+TWO_PI/lightprecision;
     }
+ }else{
+   // create light points for spirale
+     for(int i=0;i<=spiralenumber;i++){
+       myLightpoints[i]= new LightPoint(coX,coY,pointangle,v1x,v1y,number);
+       pointangle=pointangle+TWO_PI/spiralenumber;
+     }
+     pointangle=pointangle+(TWO_PI/360)*spiralespeed;
  }
 }
 
-
+//move lightpoints
 void display(){
   for(int i=1;i<=lightprecision;i++){
-     int y = number*1000+i;
-    if(myLightpoints[y] != null){
-    myLightpoints[y].display();
+    if(myLightpoints[i] != null){
+    myLightpoints[i].display();
     }else{
-    //println("myLightpoints["+y+"] is null");
+    println("myLightpoints["+i+"] is null");
   }
   }
 }
