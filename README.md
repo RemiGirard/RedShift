@@ -5,6 +5,8 @@ Redshift is made on Processing 1.5.1. It uses the ControlP5 library. It has been
 
 The program is a demo of the Redshifts effect in space.
 
+![RedShift Interface](docs/RedShiftDoc06.png)
+
 RedShift Effect:
 
 The RedShift Effect is associated with two effects of frequency changes of electro-magnetic waves in space:
@@ -13,7 +15,7 @@ The RedShift Effect is associated with two effects of frequency changes of elect
 
 The Doppler effect can be experienced with sound. When a car is approaching, the sound is higher. And when the car moves away, the sound is deeper. It's the same with light.
 
-[Doppler Effect](docs/RedShiftDoc01.png)
+![Doppler Effect](docs/RedShiftDoc01.png)
 
 The space extansion effect is less famous. The univers is expanding and reduce the frequency of the electro-magnetic waves moving in it. So the colors change. It can be detected with very far objects.
 
@@ -27,6 +29,12 @@ Interface:
 
 The light received by Earth allow use to look the difference between the color sent and the color received. With that difference we are able to know the speed of the sender.
 
+![Difference colors](docs/RedShiftDoc03.png)
+
 Many parameters are available to modify the light emmitted. For example, the space expansion effect can be activated with the GeneralRedShift button.
 
+![Parameters](docs/RedShiftDoc04.png)
+
 In adition, there are several presets of configuration to help use the application.
+
+![Preset](docs/RedShiftDoc05.png)
