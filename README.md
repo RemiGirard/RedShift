@@ -13,6 +13,8 @@ The RedShift Effect is associated with two effects of frequency changes of elect
 
 The Doppler effect can be experienced with sound. When a car is approaching, the sound is higher. And when the car moves away, the sound is deeper. It's the same with light.
 
+[Doppler Effect](docs/RedShiftDoc01.png)
+
 The space extansion effect is less famous. The univers is expanding and reduce the frequency of the electro-magnetic waves moving in it. So the colors change. It can be detected with very far objects.
 
 The application allow us to move an object which send green light. The light goes in every directions but each point of light has a different color depending on the movement of the sender. Indeed, the effect is not realistic in the application.
