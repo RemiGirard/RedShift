@@ -8,38 +8,27 @@ Light[] L1 = new Light[255+1];
 Star[] stars = new Star[10000];
 Star[] movingstars = new Star[100];
 
-//earthimage
-PImage earthimg;
+//earthimage+loadscreen
+PImage earthimg,arrows,spacebar;
 
+
+//presets
+PImage resetI,pulsarI,spiraleI,circleI,fullI,waveI,configI;
+Button resetB,pulsarB,spiraleB,circleB,fullB,waveB,configB;
 
 //parameters variables
-int lightnumbermax=30;
-float lightsize = 10;
-float lightspeed=5;
-int lightprecision=360;
-boolean locklightgenerator=true;
+int lightnumbermax,lightprecision,spiralenumber,earthsize;
+float lightsize,lightspeed,pulsarspeed,generalredshiftvalue,spiralespeed,spaceshipsize,displayspaceshipspeed;
+boolean locklightgenerator,lockpulsarbutton,generalredshift,spirale,movementstart;
 
-float pulsarspeed=0.1;
-boolean lockpulsarbutton=true;
 
-float generalredshiftvalue = 0.1;
-boolean generalredshift=true;
-
-float spiralespeed=10;
-int spiralenumber=1;
-boolean spirale=true;
-
-float spaceshipsize = 10;
-int earthsize=50;
-
-float displayspaceshipspeed = 0;
 
 //preset
 boolean[] preset=new boolean[10];
 
 
 
-
+// functions for buttons
 public void lockpulsarbutton(){
 if(!lockpulsarbutton){lockpulsarbutton=true;}
   else{lockpulsarbutton=false;}
@@ -89,21 +78,28 @@ float anglereceived =0;
 float angleactu =0;
 float anglemax,anglemin;
 float spaceshipspeed = 0;
-String approachortakeaway="no info ";
+String approachortakeaway="";
 float movespeed=0.5;
 float pointangle=0;
 boolean pulsar=false;
 float starsnumber=5000;
 float movingstarsnumber=50;
 int interfaceearth = 150;
+boolean display=true;
+boolean preload=true;
+float addtov1x=2;
+float movementangle=0;
 
 
 
 void setup(){
+  //init parameters
    size(1500,1000); 
    frameRate(24);
    colorMode(HSB,100);
    p5 = new ControlP5(this);
+   
+  
    
    //set gradient color
   c1 = color(0, 60, 60);
@@ -111,9 +107,39 @@ void setup(){
   
   
    
-   //center image
+   //images
    earthimg = loadImage("earth02.png");
-   earthimg.resize(earthsize*10,earthsize*10);
+   arrows = loadImage("arrow.png");
+   spacebar=loadImage("spacebar.png");
+
+ resetI = loadImage("reset.png");
+   pulsarI = loadImage("pulsar.png");
+   spiraleI = loadImage("spirale.png");
+   circleI = loadImage("circle.png");
+   fullI = loadImage("full.png");
+   waveI = loadImage("wave.png");
+   configI = loadImage("config.png");
+   
+   // interface : preset
+    float interfacepresetX=40;
+    float interfacepresetY= height-interfaceearth-135;
+   resetB = new Button(interfacepresetX,interfacepresetY,resetI);
+   interfacepresetX+=75;
+   pulsarB = new Button(interfacepresetX,interfacepresetY,pulsarI);
+   interfacepresetX+=75;
+   circleB = new Button(interfacepresetX,interfacepresetY,circleI);
+ 
+   interfacepresetX=40;
+   interfacepresetY+=85;
+   spiraleB = new Button(interfacepresetX,interfacepresetY,spiraleI);
+   interfacepresetX+=75;
+   fullB = new Button(interfacepresetX,interfacepresetY,fullI);
+   interfacepresetX+=75;
+   waveB = new Button(interfacepresetX,interfacepresetY,waveI);
+   
+   interfacepresetX=40;
+   interfacepresetY-=170;
+   configB = new Button(interfacepresetX,interfacepresetY,configI);
    
     //space ship vector
    v1 = new PVector(0,0);
@@ -140,11 +166,12 @@ void setup(){
      }
  
  
- 
-  //interface
+
+               
+
+   //interface
    float interfaceplace = 10;
-   
-     // light
+    // light
 p5.addSlider("lightnumbermax")
      .setPosition(10,10)
      .setRange(0,255)
@@ -171,7 +198,6 @@ p5.addSlider("lightsize")
      interfaceplace = interfaceplace+20;
      
      p5.addButton("locklightbutton")
-     .setValue(0)
      .setPosition(10,interfaceplace)
      .setSize(200,19)
      ;
@@ -186,7 +212,7 @@ p5.addSlider("lightsize")
      interfaceplace = interfaceplace+20;
      
        p5.addButton("lockpulsarbutton")
-     .setValue(0)
+
      .setPosition(10,interfaceplace)
      .setSize(200,19)
      ;
@@ -199,22 +225,11 @@ p5.addSlider("lightsize")
      interfaceplace = interfaceplace+20;
      
      p5.addButton("generalredshift")
-     .setValue(0)
+
      .setPosition(10,interfaceplace)
      .setSize(200,19)
      ;
      interfaceplace = interfaceplace+40;
-     
-     
-     
-     
-    
-     
- 
-     
-    
-     
-     
      
      p5.addSlider("spiralespeed")
      .setPosition(10,interfaceplace)
@@ -229,13 +244,7 @@ p5.addSlider("lightsize")
      interfaceplace = interfaceplace+20;
      
      
-     
-    
-     
-     
-     
       p5.addButton("spirale")
-     .setValue(0)
      .setPosition(10,interfaceplace)
      .setSize(200,19)
      ;
@@ -256,14 +265,52 @@ p5.addSlider("lightsize")
      
      myKnobA = p5.addKnob("displayspaceshipspeed")
                .setRange(0,1)
-               .setValue(50)
                .setPosition(width-210,height-220)
                .setRadius(100)
                .setDragDirection(Knob.HORIZONTAL)
                ;
+ reset();
+ updateP5();
+ HideCP5();
 }
 
+// function used for reset paremeters on presets
+void reset(){
+ lightnumbermax=30;
+lightsize = 10;
+ lightspeed=5;
+lightprecision=360;
+locklightgenerator=false;
+pulsarspeed=0.1;
+lockpulsarbutton=false;
+ generalredshiftvalue = 0.1;
+ generalredshift=false;
+ spiralespeed=10;
+spiralenumber=1;
+spirale=false;
+spaceshipsize = 10;
+earthsize=50;
+displayspaceshipspeed = 0; 
+movementstart =false;
 
+
+
+
+}
+// update display values
+void updateP5(){
+  p5.getController("lightnumbermax").setValue(lightnumbermax);
+  p5.getController("lightsize").setValue(lightsize);
+  p5.getController("lightspeed").setValue(lightspeed);
+  p5.getController("lightprecision").setValue(lightprecision);
+  p5.getController("pulsarspeed").setValue(pulsarspeed);
+  p5.getController("generalredshiftvalue").setValue(generalredshiftvalue);
+  p5.getController("spiralespeed").setValue(spiralespeed);
+  p5.getController("spiralenumber").setValue(spiralenumber);
+  p5.getController("spaceshipsize").setValue(spaceshipsize);
+  p5.getController("earthsize").setValue(earthsize);
+  
+}
 
 
 
@@ -345,6 +392,10 @@ if(keytopress[0] || locklightgenerator || pulsar){
   image(earthimg, width/2, height/2,earthsize,earthsize);
    
    
+   
+   
+
+   
    //interface hearth view
    stroke(100);
    fill(0);
@@ -355,6 +406,7 @@ if(keytopress[0] || locklightgenerator || pulsar){
    
   
     // Move the stars deppending on light received
+   
    float phi = Math.abs(anglereceived - angleactu);      
    movingstarspeed = phi > PI ? TWO_PI - phi : phi;
    
@@ -382,7 +434,7 @@ if(keytopress[0] || locklightgenerator || pulsar){
   setGradient(startinterfacecolor, height-interfacecolor, interfacecolor*4, interfacecolor, c2, c1);
  float basicpos=map(42.5,85,0,startinterfacecolor,startinterfacecolor+interfacecolor*4-selectcolorsize);
  
- 
+
    //smooth the movement
     float addtocoloractu;
     if(colorhuereceived!=coloractu){
@@ -411,8 +463,8 @@ if(keytopress[0] || locklightgenerator || pulsar){
   textAlign(CENTER);
   float movereceived=0;
   
-  if(coloractu>42.5){movereceived=coloractu-42.5;approachortakeaway="approach at ";}
-  if(coloractu<42.5){movereceived=42.5-coloractu;approachortakeaway="takeaway at ";}
+  if(coloractu>42.5){movereceived=coloractu-42.5;approachortakeaway="approche à ";}
+  if(coloractu<42.5){movereceived=42.5-coloractu;approachortakeaway="s'éloigne à ";}
   movereceived=map(movereceived,0,42.5,0,100);
   movereceived=round(movereceived);
   String displaymovereceived = str(movereceived);
@@ -424,7 +476,7 @@ if(keytopress[0] || locklightgenerator || pulsar){
   displaymovereceived = displaymovereceived.substring(0,2);
   }
   
-  text(approachortakeaway+displaymovereceived+"% lightspeed",basicpos+selectcolorsize, height-interfacecolor-25);
+  text(approachortakeaway+displaymovereceived+"% vitesse lumière",basicpos+selectcolorsize-10, height-interfacecolor-25);
   
   
   
@@ -469,27 +521,174 @@ if(keytopress[4]){moveX=movespeed;}
   }
   
  
-  
+  //interface preset
+   resetB.display();
+   pulsarB.display();
+   spiraleB.display();
+   circleB.display();
+   fullB.display();
+   waveB.display();
+   configB.display();
+   
+    if(configB.selected){
+      configB.selected=false;
 
+ HideCP5();
+}
+   
+   if(resetB.selected){
+      resetB.selected=false;
+ reset();
+
+}
  
+  if(pulsarB.selected){
+    pulsarB.selected=false;
+ 
+  reset();
+lockpulsarbutton=true;
+}
+
+  if(spiraleB.selected){
+    spiraleB.selected=false;
+  
+ reset();
+ spirale=true;
+ locklightgenerator=true;
+ lightnumbermax=255;
+ spiralenumber=4;
+ updateP5();
+}
+
+  if(circleB.selected){
+    circleB.selected=false;
+
+  reset();
+  locklightgenerator=true;
+}
+  
+  
+  if(fullB.selected){
+    fullB.selected=false;
+  
+  reset();
+  locklightgenerator=true;
+  lightnumbermax=85;
+  lightsize=50;
+  lightspeed=20;
+  lightprecision=180;
+  
+  updateP5();
   
 }
 
+  if(waveB.selected){
+    
+    reset();
+     spirale=true;
+   locklightgenerator=true;
+   spiralenumber=2;
+   spiralespeed=0;
+   lightnumbermax=255;
+   posX=50;
+   posY=height/2-30;
+     movementstart=true;
+   
+  
+  lightspeed=4;
+
+
+   updateP5();
+  waveB.selected=false;
+    
+}
+
+if(movementstart){
+  pointangle=0;
+  
+  if(posX>=width || posX<=0){addtov1x=-addtov1x;}
+    v1.x=addtov1x;
+    v1.y=(sin(movementangle/2))*2;
+    movementangle+=0.1;
+    
+   }
+   
+   
+   if(preload){
+     background(0);
+     textAlign(CENTER);
+     text("Vous etes le/la fier(e) pilote d'un vaisseau spatial.",width/2,height/3-50);
+     text("Votre vaisseau est d'une puissance jamais égalé puisqu'il réussi à s'approcher de la vitesse de la lumière !",width/2,height/3-25);
+     text("Pour ne rien gacher, il est capable d'émettre de la lumière dans toutes les directions.",width/2,height/3);
+     text("Ces formidables capacités vous permettront d'observer l'influence",width/2,height/3+25);
+     text("de la vitesse du vaisseau sur la couleur de la lumière qu'il émet.",width/2,height/3+50);
+     
+     image(arrows, 2*width/3, height/2,200,100);
+     text("Les flèches permettent",2*width/3,height/2+100);
+     text("de déplacer le vaisseau",2*width/3,height/2+125);
+     image(spacebar, width/3, height/2,350,80);
+     text("La barre espace permet",width/3,height/2+100);
+     text("d'émettre de la lumière",width/3,height/2+125);
+     
+     text("Appuyez sur Espace pour continuer",width/2,2.5*height/3);
+   }
+   
+   
+}
+
+
+
 void keyPressed(){
-  if(key=='w' || key=='W'){keytopress[1]=true;}
-  if(key=='a' || key=='A'){keytopress[2]=true;}
-  if(key=='s' || key=='S'){keytopress[3]=true;}
-  if(key=='d' || key=='D'){keytopress[4]=true;}
-  if(key=='m' || key=='M'){keytopress[0]=true;}
+  preload=false;
+  if(keyCode == LEFT){keytopress[2]=true;}
+  if(key=='z' || key=='Z' || keyCode == UP){keytopress[1]=true;}
+  if(key=='q' || key=='Q' || keyCode == LEFT){keytopress[2]=true;}
+  if(key=='s' || key=='S' || keyCode == DOWN){keytopress[3]=true;}
+  if(key=='d' || key=='D' || keyCode == RIGHT){keytopress[4]=true;}
+  if(key=='l' || key=='L' || key==' '){keytopress[0]=true;}
 }
 
 void keyReleased(){
-  if(key=='w' || key=='W'){keytopress[1]=false;}
-  if(key=='a' || key=='A'){keytopress[2]=false;}
-  if(key=='s' || key=='S'){keytopress[3]=false;}
-  if(key=='d' || key=='D'){keytopress[4]=false;}
-  if(key=='m' || key=='M'){keytopress[0]=false;}
+  if(key=='z' || key=='Z' || keyCode == UP){keytopress[1]=false;}
+  if(key=='Q' || key=='Q' || keyCode == LEFT){keytopress[2]=false;}
+  if(key=='s' || key=='S' || keyCode == DOWN){keytopress[3]=false;}
+  if(key=='d' || key=='D' || keyCode == RIGHT){keytopress[4]=false;}
+  if(key=='l' || key=='L' || key==' '){keytopress[0]=false;}
 }
+
+void mouseMoved() {
+  //interface preset
+   resetB.rollover(mouseX,mouseY);
+   pulsarB.rollover(mouseX,mouseY);
+   spiraleB.rollover(mouseX,mouseY);
+   circleB.rollover(mouseX,mouseY);
+   fullB.rollover(mouseX,mouseY);
+   waveB.rollover(mouseX,mouseY);
+  configB.rollover(mouseX,mouseY);
+}
+
+void mousePressed() {
+  resetB.clic(mouseX,mouseY);
+   pulsarB.clic(mouseX,mouseY);
+   spiraleB.clic(mouseX,mouseY);
+   circleB.clic(mouseX,mouseY);
+   fullB.clic(mouseX,mouseY);
+   waveB.clic(mouseX,mouseY);
+   configB.clic(mouseX,mouseY);
+   
+}
+
+void HideCP5(){
+  if (display == true) {
+    p5.hide();
+    display=false;
+  }
+  else {
+    p5.show();
+    display=true;
+  }
+} 
+
 
 void setGradient(int x, int y, float w, float h, color c1, color c2) {
     for (int i = x; i <= x+w; i++) {

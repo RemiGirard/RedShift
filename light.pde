@@ -21,8 +21,11 @@ void lightwave(float coX, float coY,float v1x, float v1y){
      for(int i=0;i<=spiralenumber;i++){
        myLightpoints[i]= new LightPoint(coX,coY,pointangle,v1x,v1y,number);
        pointangle=pointangle+TWO_PI/spiralenumber;
+
      }
+     pointangle=pointangle-TWO_PI;
      pointangle=pointangle+(TWO_PI/360)*spiralespeed;
+
      if(pointangle>=TWO_PI){pointangle=pointangle-TWO_PI;}
  }
 }
