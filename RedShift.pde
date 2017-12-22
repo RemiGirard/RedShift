@@ -641,16 +641,16 @@ if(movementstart){
 void keyPressed(){
   preload=false;
   if(keyCode == LEFT){keytopress[2]=true;}
-  if(key=='z' || key=='Z' || keyCode == UP){keytopress[1]=true;}
-  if(key=='q' || key=='Q' || keyCode == LEFT){keytopress[2]=true;}
+  if(key=='w' || key=='W' || keyCode == UP){keytopress[1]=true;}
+  if(key=='a' || key=='A' || keyCode == LEFT){keytopress[2]=true;}
   if(key=='s' || key=='S' || keyCode == DOWN){keytopress[3]=true;}
   if(key=='d' || key=='D' || keyCode == RIGHT){keytopress[4]=true;}
   if(key=='l' || key=='L' || key==' '){keytopress[0]=true;}
 }
 
 void keyReleased(){
-  if(key=='z' || key=='Z' || keyCode == UP){keytopress[1]=false;}
-  if(key=='Q' || key=='Q' || keyCode == LEFT){keytopress[2]=false;}
+  if(key=='w' || key=='W' || keyCode == UP){keytopress[1]=false;}
+  if(key=='a' || key=='A' || keyCode == LEFT){keytopress[2]=false;}
   if(key=='s' || key=='S' || keyCode == DOWN){keytopress[3]=false;}
   if(key=='d' || key=='D' || keyCode == RIGHT){keytopress[4]=false;}
   if(key=='l' || key=='L' || key==' '){keytopress[0]=false;}
