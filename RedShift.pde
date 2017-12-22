@@ -617,9 +617,9 @@ if(movementstart){
    if(preload){
      background(0);
      textAlign(CENTER);
-     text("Vous etes le/la fier(e) pilote d'un vaisseau spatial.",width/2,height/3-50);
-     text("Votre vaisseau est d'une puissance jamais égalé puisqu'il réussi à s'approcher de la vitesse de la lumière !",width/2,height/3-25);
-     text("Pour ne rien gacher, il est capable d'émettre de la lumière dans toutes les directions.",width/2,height/3);
+     text("Vous etes la·le fier·e pilote d'un vaisseau spatial.",width/2,height/3-50);
+     text("Votre vaisseau est d'une puissance jamais égalée puisqu'il réussi à s'approcher de la vitesse de la lumière !",width/2,height/3-25);
+     text("Pour ne rien gâcher, il est capable d'émettre de la lumière dans toutes les directions.",width/2,height/3);
      text("Ces formidables capacités vous permettront d'observer l'influence",width/2,height/3+25);
      text("de la vitesse du vaisseau sur la couleur de la lumière qu'il émet.",width/2,height/3+50);
      
