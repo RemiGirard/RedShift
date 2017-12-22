@@ -14,7 +14,7 @@ The RedShift Effect is associated with two effects of frequency changes of elect
   - The Doppler effect
   - The space extansion effect
 
-The Doppler effect can be experienced with sound. When a car is approaching, the sound is higher. And when the car moves away, the sound is deeper. It's the same with light.
+The Doppler effect can be experienced with sound. When a car is approaching, the sound frequency is higher. And when the car moves away, the sound frequency is deeper. It's the same with electro-magnetic waves.
 
 ![Doppler Effect](docs/RedShiftDoc01.png)
 
