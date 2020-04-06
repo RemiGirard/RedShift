@@ -2,23 +2,23 @@
 
 Processing code
 
-Redshift is made on Processing 1.5.1. It uses the ControlP5 library. It has been tested on Processing 2.2.1 with corresponding librarie.
+Redshift is made on Processing 1.5.1. It uses the ControlP5 library. It has been tested on Processing 2.2.1 with corresponding library.
 
 The program is a demonstration of the redshift effects in space.
 
 ![RedShift Interface](docs/RedShiftDoc06.png)
 
-The redshift effect is associated with two effects of frequency changes of electro-magnetic waves in space:
+The redshift effect is an association of two effects of frequency changes of electro-magnetic waves (light) in space:
   - The Doppler effect
   - The space extansion effect
 
-The Doppler effect can be experienced with sound. When a car is approaching, the sound frequency is higher. And when the car moves away, the sound frequency is deeper. The same effect is observed with electro-magnetic waves (light).
+The Doppler effect can be experienced with sound. When a car is approaching, the sound frequency is higher. And when the car moves away, the sound frequency is deeper. The same effect is observed with electro-magnetic waves and change the color of the light.
 
 ![Doppler Effect](docs/RedShiftDoc01.png)
 
 The space extansion effect is less famous. The univers is expanding and reduce the frequency of the electro-magnetic waves moving in it. As the frequency of the electro-magnetic waves, so the color of light change. It can be detected with very far objects.
 
-This application allow us to move an object which send green light. The light goes in every directions but each point of light emitted has a different frequency so a different color depending on the movement of the sender relative to the earth. Indeed, the scale of the effect is exagerated in the application and the frequency of the electromagnetic waves are limited to the visible spectrum.
+This application allow us to move an object which sends green light. The light goes in every directions but each point of light emitted has a different frequency so a different color depending on the movement of the sender relative to the earth. Indeed, the scale of the effect is exagerated in the application and the frequency of the electromagnetic waves are limited to the visible spectrum.
 
 See there for more info: 
 Red Shift: https://en.wikipedia.org/wiki/Redshift
