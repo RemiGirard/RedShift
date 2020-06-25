@@ -17,7 +17,7 @@ The Doppler effect can be experienced with sound. When a car is approaching, the
 
 ![Light specter](docs/RedShiftDoc07.png)
 
-The space extansion effect is less famous. The universe is expanding and reduce the frequency of the electro-magnetic waves moving in it. As the frequency of the electro-magnetic waves, so the color of light change. It can be detected with very far objects.
+The space extansion effect is less famous. The universe is expanding and reduce the frequency of the electro-magnetic waves moving in it. As the frequency of the electro-magnetic waves change, the color of light change as well. It can be detected with very far objects.
 
 This application allow us to move an object which sends green light. The light goes in every directions but each point of light emitted has a different frequency so a different color depending on the movement of the sender relative to the earth. Indeed, the scale of the effect is exagerated in the application and the frequency of the electromagnetic waves are limited to the visible spectrum.
 
