@@ -2,11 +2,11 @@
 
 Redshift is made on Processing 1.5.1. It uses the ControlP5 library. It has been tested on Processing 2.2.1 with corresponding library.
 
-The program is a demonstration of the redshift effects in space.
+The program is a demonstration of the redshift effect in space.
 
 ![RedShift Interface](docs/animatedDemo.gif)
 
-The redshift effect is an association of two effects of frequency changes of electro-magnetic waves (light) in space:
+The redshift effect is the association of two effects that change frequency of electro-magnetic waves (light) in space:
   - The Doppler effect
   - The space extansion effect
 
